@@ -9,6 +9,11 @@ function usage() {
     echo "options:"
     echo "  --just-branch: return only the branch name"
     echo "  --no-git-commit-revision: do not add the git revision"
+    echo ""
+    echo "Note: if TRAVIS env variable is set to TRUE, we consider"
+    echo "      that the build is made by travis CI server, so we use"
+    echo "      TRAVIS_BRANCH and TRAVIS_BUILD_NUMBER env value"
+
 }
 
 JUST_BRANCH=0
@@ -31,16 +36,26 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null |sed 's/-/_/g')
-if test "${BRANCH}" = ""; then
-    BRANCH=unknown
+if test "${TRAVIS}" = "true"; then
+    # this is a travis build
+    BRANCH="${TRAVIS_BRANCH}"
+else
+    BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null |sed 's/-/_/g')
+    if test "${BRANCH}" = ""; then
+        BRANCH=unknown
+    fi
 fi
 if test "${JUST_BRANCH}" = "1"; then
     echo "${BRANCH}"
     exit 0
 fi
 
-NUMBER_OF_COMMITS=$(git rev-list HEAD 2>/dev/null |wc -l)
+if test "${TRAVIS}" = "true"; then
+    # this is a travis build
+    NUMBER_OF_COMMITS=${TRAVIS_BUILD_NUMBER}
+else
+    NUMBER_OF_COMMITS=$(git rev-list HEAD 2>/dev/null |wc -l)
+fi
 
 if test "${COMMIT_REVISION}" = "0"; then
     echo "${BRANCH}.${NUMBER_OF_COMMITS}"
