@@ -9,3 +9,6 @@ script:
 deploy:
     provider: script
     script: make release
+
+notifications:
+    slack: metwork-framework:dAfaodV8XzpmqIcje2zE3jcn
