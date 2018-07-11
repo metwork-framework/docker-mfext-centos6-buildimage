@@ -31,7 +31,7 @@ pipeline:
     server: https://51.38.41.227:8000
     fork: true
     repositories:
-      - metwork-framework/mfext@master
+      - metwork-framework/mfext
     secrets: [ downstream_token ]
     when:
       status: [ success ]
