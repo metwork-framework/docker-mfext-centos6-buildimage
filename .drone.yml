@@ -5,7 +5,7 @@ pipeline:
     repo: metwork/mfext-centos6-buildimage
     tags:
       - latest
-      - {DRONE_BRANCH}
+      - ${DRONE_BRANCH}
     when:
       branch: master
       event: push
@@ -14,7 +14,7 @@ pipeline:
     secrets: [ docker_username, docker_password ]
     repo: metwork/mfext-centos6-buildimage
     tags:
-      - {DRONE_BRANCH}
+      - ${DRONE_BRANCH}
     when:
       event: push
       branch: 
