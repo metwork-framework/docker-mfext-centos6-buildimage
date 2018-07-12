@@ -21,18 +21,17 @@ pipeline:
         excludes: master
   slack:
     image: plugins/slack
-    webhook: https://hooks.slack.com/services/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
     channel: dev
     username: drone
     when:
       status: [ failure ]
+    secrets: [ slack_webhook ]
   trigger:
     image: plugins/downstream
-    server: http://51.38.41.227:8000
     fork: true
     repositories:
       - metwork-framework/mfext
-    secrets: [ downstream_token ]
+    secrets: [ downstream_token, downstream_server ]
     when:
       status: [ success ]
       event: push
