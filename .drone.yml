@@ -28,7 +28,7 @@ pipeline:
       status: [ failure ]
   trigger:
     image: plugins/downstream
-    server: https://51.38.41.227:8000
+    server: http://51.38.41.227:8000
     fork: true
     repositories:
       - metwork-framework/mfext
