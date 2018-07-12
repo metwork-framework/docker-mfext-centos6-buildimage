@@ -30,7 +30,7 @@ pipeline:
     image: plugins/downstream
     fork: true
     repositories:
-      - metwork-framework/mfext
+      - metwork-framework/mfext@${DRONE_BRANCH}
     secrets: [ downstream_token, downstream_server ]
     when:
       status: [ success ]
