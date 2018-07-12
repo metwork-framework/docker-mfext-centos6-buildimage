@@ -18,7 +18,7 @@ pipeline:
     when:
       event: push
       branch: 
-        excludes: master
+        exclude: [ master ]
   slack:
     image: plugins/slack
     channel: dev
