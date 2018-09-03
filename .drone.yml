@@ -35,3 +35,4 @@ pipeline:
     when:
       status: [ success ]
       event: push
+
