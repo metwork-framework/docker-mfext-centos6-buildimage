@@ -1,6 +1,6 @@
 trigger_common: &trigger_common
-  image: plugins/downstream
-  fork: true
+  image: metwork/drone-downstream-specific-image:${DRONE_BRANCH}
+  pull: true
   secrets: [ downstream_token, downstream_server ]
   params:
     - FORCED_OS_VERSION=centos6
@@ -14,9 +14,23 @@ pipeline:
       - /var/run/docker.sock:/var/run/docker.sock
       - /root:/root
     commands:
-      - if test "${DRONE_BRANCH}" = "master"; then docker build -t metwork/mfext-centos6-buildimage:master -t metwork/mfext-centos6-buildimage:latest .; else docker build -t metwork/mfext-centos6-buildimage:${DRONE_BRANCH} .; fi
-      - docker push metwork/mfext-centos6-buildimage:${DRONE_BRANCH}
-      - if test "${DRONE_BRANCH}" = "master"; then docker push metwork/mfext-centos6-buildimage:latest; fi
+      - HASH_BEFORE=`docker images -q metwork/mfext-centos6-buildimage:${DRONE_BRANCH}`
+      - if test "${DRONE_BRANCH}" = "master"; then
+          docker build -t metwork/mfext-centos6-buildimage:master -t metwork/mfext-centos6-buildimage:latest .;
+        else
+          docker build -t metwork/mfext-centos6-buildimage:${DRONE_BRANCH} .;
+        fi
+      - HASH_AFTER=`docker images -q metwork/mfext-centos6-buildimage:${DRONE_BRANCH}`
+      - if test "$${HASH_BEFORE}" = "$${HASH_AFTER}"; then
+          touch .drone_downstream_bypass;
+        else
+          if test "${DRONE_BRANCH}" = "master"; then
+            docker push metwork/mfext-centos6-buildimage:${DRONE_BRANCH};
+            docker push metwork/mfext-centos6-buildimage:latest;
+          elif test "${DRONE_BRANCH}" = "integration"; then
+            docker push metwork/mfext-centos6-buildimage:${DRONE_BRANCH};
+          fi;
+        fi
     when:
       event: push
   trigger_integration:
@@ -24,7 +38,7 @@ pipeline:
     repositories:
       - metwork-framework/mfext@integration
     when:
-      status: [ success ]
+      status: success
       event: push
       branch: integration
   trigger_master:
@@ -32,6 +46,8 @@ pipeline:
     repositories:
       - metwork-framework/mfext@master
     when:
-      status: [ success ]
+      status: success
       event: push
-      branch: master 
+      branch: master
+
+branches: [ master, integration, ci_*, pci_* ]
