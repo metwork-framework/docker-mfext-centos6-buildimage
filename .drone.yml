@@ -1,5 +1,11 @@
+
+    
+    
+    
+
+
 trigger_common: &trigger_common
-  image: metwork/drone-downstream-specific-image:${DRONE_BRANCH}
+  image: metwork/drone-downstream-specific-image:latest
   pull: true
   secrets: [ downstream_token, downstream_server ]
   params:
@@ -16,9 +22,11 @@ pipeline:
     commands:
       - HASH_BEFORE=`docker images -q metwork/mfext-centos6-buildimage:${DRONE_BRANCH}`
       - if test "${DRONE_BRANCH}" = "master"; then
-          docker build -t metwork/mfext-centos6-buildimage:master -t metwork/mfext-centos6-buildimage:latest .;
+          docker build -t metwork/mfext-centos6-buildimage:master -t metwork/mfext-centos6-buildimage:latest --build-arg BRANCH=master --build-arg CACHEBUST=${DRONE_BUILD_NUMBER} .;
+        elif test "${DRONE_BRANCH}" = "integration"; then
+          docker build -t metwork/mfext-centos6-buildimage:integration --build-arg BRANCH=integration --build-arg CACHEBUST=${DRONE_BUILD_NUMBER} .;
         else
-          docker build -t metwork/mfext-centos6-buildimage:${DRONE_BRANCH} .;
+          docker build -t metwork/mfext-centos6-buildimage:${DRONE_BRANCH} --build-arg BRANCH=master --build-arg CACHEBUST=${DRONE_BUILD_NUMBER} .;
         fi
       - HASH_AFTER=`docker images -q metwork/mfext-centos6-buildimage:${DRONE_BRANCH}`
       - if test "$${HASH_BEFORE}" = "$${HASH_AFTER}"; then
@@ -33,21 +41,25 @@ pipeline:
         fi
     when:
       event: push
-  trigger_integration:
-    <<: *trigger_common
-    repositories:
-      - metwork-framework/mfext@integration
-    when:
-      status: success
-      event: push
-      branch: integration
   trigger_master:
     <<: *trigger_common
     repositories:
+
       - metwork-framework/mfext@master
+
     when:
       status: success
       event: push
       branch: master
+  trigger_integration:
+    <<: *trigger_common
+    repositories:
+
+      - metwork-framework/mfext@integration
+
+    when:
+      status: success
+      event: push
+      branch: integration
 
 branches: [ master, integration, ci_*, pci_* ]
