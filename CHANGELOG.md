@@ -1,6 +1,14 @@
-<a name="unreleased"></a>
+# release_0.6 CHANGELOG
+
+
 ## [Unreleased]
 
-### Feat
-- add python27 scl ([#24](https://github.com/metwork-framework//issues/24))
+### New Features
+- define centos6 release used (6.10) (#25)
+- add python27 scl (#24)
+
+
+
+
+
 
