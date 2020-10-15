@@ -43,6 +43,7 @@ pipeline:
     when:
       event: push
 
+
   trigger:
     <<: *trigger_common
     repositories:
@@ -50,6 +51,7 @@ pipeline:
     when:
       status: success
       event: push
+
 
 
 
