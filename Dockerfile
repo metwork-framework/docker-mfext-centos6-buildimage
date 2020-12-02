@@ -1,3 +1,4 @@
+# we use metwork/centos6 because of centos6 EOL
 FROM metwork/centos6:latest
 
 RUN yum -y install epel-release centos-release-scl
