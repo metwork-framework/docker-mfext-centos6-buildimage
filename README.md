@@ -7,7 +7,6 @@
 
 
 
-
 [![Drone CI](http://metwork-framework.org:8000/api/badges/metwork-framework/docker-mfext-centos6-buildimage/status.svg)](http://metwork-framework.org:8000/metwork-framework/docker-mfext-centos6-buildimage)
 [![DockerHub](https://github.com/metwork-framework/resources/blob/master/badges/dockerhub_link.svg)](https://hub.docker.com/r/metwork/docker-mfext-centos6-buildimage/)
 [![Maintenance](https://github.com/metwork-framework/resources/blob/master/badges/maintained.svg)]()
@@ -26,7 +25,6 @@ for building and managing production grade applications or micro-services
 ## What is it ?
 
 A centos6 based docker image to build metwork/mfext module.
-
 
 
 
