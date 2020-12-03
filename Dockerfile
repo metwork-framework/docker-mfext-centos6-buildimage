@@ -1,4 +1,4 @@
-FROM centos:centos6.10
+FROM metwork/centos6:latest
 
 <<<<<<< HEAD
 RUN yum -y install epel-release centos-release-scl
